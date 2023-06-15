@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState } from "react";
+import "./App.scss";
+import Header from "./components/Header";
+import ModalAddNew from "./components/ModalAddNew";
+import TableUsers from "./components/TableUsers";
+import { Container } from "react-bootstrap";
 function App() {
+  const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
+
+  const handleClose = () => {
+    setIsShowModalAddNew(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hello world React with Hoi Dan IT
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <Header />
+      <Container>
+        <div className="my-3 add-new">
+          <span>
+            {" "}
+            <b>List User:</b>{" "}
+          </span>
+          <button
+            className="btn btn-success"
+            onClick={() => {
+              setIsShowModalAddNew(true);
+            }}
+          >
+            Add new user
+          </button>
+        </div>
+        <TableUsers />
+      </Container>
+
+      <ModalAddNew show={isShowModalAddNew} handleClose={handleClose} />
     </div>
   );
 }
