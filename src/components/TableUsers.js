@@ -7,7 +7,7 @@ import ModalEditUser from "./ModalEditUser";
 import ModalConfirm from "./ModalConfirm";
 import _, { debounce } from "lodash";
 import "./TableUser.scss";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
@@ -25,6 +25,7 @@ const TableUsers = (props) => {
   const [sortField, setSortField] = useState("id");
 
   const [keyword, setKeyword] = useState("");
+  const [dataExport, setDataExport] = useState([]);
 
   const handleClose = () => {
     setIsShowModalAddNew(false);
@@ -102,12 +103,24 @@ const TableUsers = (props) => {
     }
   }, 500);
 
-  const csvData = [
-    ["firstname", "lastname", "email"],
-    ["Ahmed", "Tomi", "ah@smthing.co.com"],
-    ["Raed", "Labes", "rl@smthing.co.com"],
-    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
-  ];
+
+
+  const getUserExport = (event, done) => {
+    let result = [];
+    if (listUsers && listUsers.length > 0) {
+      result.push(["Id", "Email", "First name", "Last name"]);
+     listUsers.map((item,index)=> {
+      let arr = [];
+      arr[0] = item.id;
+      arr[1] = item.email;
+      arr[2] = item.first_name;
+      arr[3] = item.last_name;
+      result.push(arr);
+     })
+     setDataExport(result)
+    done();
+    }
+  };
 
   return (
     <>
@@ -117,14 +130,16 @@ const TableUsers = (props) => {
           <b>List User:</b>{" "}
         </span>
         <div className="group-btns">
-          <label htmlFor="test"  className="btn btn-warning" >
-          <i className="fa-solid fa-file-import"></i> Import
+          <label htmlFor="test" className="btn btn-warning">
+            <i className="fa-solid fa-file-import"></i> Import
           </label>
-          <input id="test" type='file' hidden  />
+          <input id="test" type="file" hidden />
           <CSVLink
             filename={"user.csv"}
             className="btn btn-primary"
-            data={csvData}
+            data={dataExport}
+            asyncOnClick={true}
+            onClick={getUserExport}
           >
             <i className="fa-solid fa-file-arrow-down "></i> Export
           </CSVLink>
