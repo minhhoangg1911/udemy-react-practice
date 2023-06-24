@@ -7,6 +7,8 @@ import ModalEditUser from "./ModalEditUser";
 import ModalConfirm from "./ModalConfirm";
 import _, { debounce } from "lodash";
 import "./TableUser.scss";
+import { CSVLink, CSVDownload } from "react-csv";
+
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
@@ -86,7 +88,7 @@ const TableUsers = (props) => {
   };
 
   const handleSearch = debounce((event) => {
-   console.log(">>> run search term...")
+    console.log(">>> run search term...");
     // setKeyword(event.target.value);
     let term = event.target.value;
     if (term) {
@@ -98,7 +100,14 @@ const TableUsers = (props) => {
     } else {
       getUsers(1);
     }
-  }, 500)
+  }, 500);
+
+  const csvData = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  ];
 
   return (
     <>
@@ -107,14 +116,28 @@ const TableUsers = (props) => {
           {" "}
           <b>List User:</b>{" "}
         </span>
-        <button
-          className="btn btn-success"
-          onClick={() => {
-            setIsShowModalAddNew(true);
-          }}
-        >
-          Add new user
-        </button>
+        <div className="group-btns">
+          <label htmlFor="test"  className="btn btn-warning" >
+          <i className="fa-solid fa-file-import"></i> Import
+          </label>
+          <input id="test" type='file' hidden  />
+          <CSVLink
+            filename={"user.csv"}
+            className="btn btn-primary"
+            data={csvData}
+          >
+            <i className="fa-solid fa-file-arrow-down "></i> Export
+          </CSVLink>
+
+          <button
+            className="btn btn-success"
+            onClick={() => {
+              setIsShowModalAddNew(true);
+            }}
+          >
+            <i class="fa-solid fa-circle-plus"></i> Add new
+          </button>
+        </div>
       </div>
 
       <div className="col-4 my-3">
